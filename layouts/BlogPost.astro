@@ -1,0 +1,28 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import BaseHead from "@components/BaseHead.astro";
+import Image from "@components/Image.astro";
+import { buildBlogPostingSchema, buildBreadcrumbSchema } from "@lib/schema";
+import { generateBreadcrumbs } from "@utils/breadcrumbs";
+
+const { title, body, image, publishedAt } = Astro.props;
+
+const pathname = Astro.url.pathname;
+const breadcrumbItems = generateBreadcrumbs(pathname);
+
+const jsonld = [
+  buildBlogPostingSchema({ title, image, publishedAt }),
+  buildBreadcrumbSchema(breadcrumbItems)
+];
+---
+
+<BaseLayout head={{ title, jsonld }}>
+  <article class="prose mx-auto">
+    <h1>{title}</h1>
+    {image && <Image src={image} alt={title} class="rounded mt-4" />}
+
+    <div class="mt-6">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>

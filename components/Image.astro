@@ -1,0 +1,8 @@
+---
+import { safeImageUrl } from "@utils/safeImageUrl";
+
+const { src, alt = "", class: className = "" } = Astro.props;
+const url = safeImageUrl(src);
+---
+
+<img src={url} alt={alt} class={className} loading="lazy" />

@@ -1,0 +1,18 @@
+---
+import { navConfig } from "@config/nav.config";
+import HeaderLink from "./HeaderLink.astro";
+---
+
+<header class="w-full py-4 border-b flex items-center justify-between">
+  <a href="/" class="text-xl font-bold">
+    {navConfig.siteName}
+  </a>
+
+  <nav class="flex gap-4">
+    {
+      navConfig.links.map(link => (
+        <HeaderLink href={link.href} text={link.text} />
+      ))
+    }
+  </nav>
+</header>

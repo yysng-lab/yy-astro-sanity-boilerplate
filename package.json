@@ -1,0 +1,17 @@
+{
+  "name": "yy-astro-sanity-boilerplate",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^4.0.0",
+    "@astrojs/tailwind": "^5.0.0",
+    "@astrojs/cloudflare": "^10.0.0",
+    "@sanity/client": "^6.0.0",
+    "@sanity/image-url": "^1.0.1"
+  }
+}

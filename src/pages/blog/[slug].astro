@@ -1,0 +1,23 @@
+---
+import BlogPost from "@layouts/BlogPost.astro";
+import { fetchFromSanity } from "@utils/fetchFromSanity";
+
+const { slug } = Astro.params;
+
+const query = `*[_type=="post" && slug.current==$slug][0]{
+  title,
+  body,
+  "image": mainImage.asset->url,
+  publishedAt
+}`;
+
+const post = await fetchFromSanity(query, { slug });
+---
+
+<BlogPost
+  title={post.title}
+  image={post.image}
+  publishedAt={post.publishedAt}
+>
+  <div innerHTML={post.body} />
+</BlogPost>
