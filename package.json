@@ -15,7 +15,7 @@
   ],
   "peerDependencies": {
     "astro": "^5.0.0",
-    "sanity": "^3.20.0",
+    "sanity": "^4.0.0",
     "@portabletext/to-html": "^4.0.1"
   }
 }
