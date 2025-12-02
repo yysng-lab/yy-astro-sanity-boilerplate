@@ -1,17 +1,22 @@
 {
-  "name": "yy-astro-sanity-boilerplate",
-  "version": "0.0.1",
+  "name": "@yysng/astro-boilerplate",
+  "version": "1.0.1",
+  "description": "Astro + Sanity Boilerplate with AEO Layers 1–5",
   "type": "module",
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview"
+  "exports": {
+    "./components/*": "./src/components/*",
+    "./layouts/*": "./src/layouts/*",
+    "./config/*": "./src/config/*",
+    "./utils/*": "./src/utils/*"
   },
-  "dependencies": {
+  "main": "index.js",
+  "files": [
+    "src"
+  ],
+  "peerDependencies": {
     "astro": "^4.0.0",
-    "@astrojs/tailwind": "^5.0.0",
-    "@astrojs/cloudflare": "^10.0.0",
-    "@sanity/client": "^6.0.0",
-    "@sanity/image-url": "^1.0.1"
+    "sanity": "^3.20.0",
+    "@portabletext/to-html": "^4.0.1"
   }
+
 }

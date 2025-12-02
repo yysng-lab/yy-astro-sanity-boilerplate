@@ -1,0 +1,183 @@
+---
+/**
+ * BaseHead.astro — FINAL BOILERPLATE VERSION (with full GEO support)
+ * ------------------------------------------------------------------
+ * ✔ Central SEO engine for all boilerplate-based projects
+ * ✔ Global JSON-LD (Organization, LocalBusiness, WebSite)
+ * ✔ Page-level JSON-LD injection (Article, Country, City, etc.)
+ * ✔ Full GEO system: Place + PostalAddress + GeoCoordinates
+ * ✔ GEO HTML meta tags (geo.placename, geo.region, geo.position, ICBM)
+ * ✔ Clean dedupes for WebSite + Organization
+ */
+
+import { siteConfig } from "@config/site.config.ts";
+import { jsonldConfig } from "@config/jsonld.config.ts";
+import { businessConfig } from "@config/business.config.ts";
+import { aeoConfig } from "@config/aeo.config.ts";
+
+const {
+  title = siteConfig.defaultTitle,
+  description = siteConfig.defaultDescription,
+  image = siteConfig.defaultOgImage,
+  canonical = siteConfig.siteUrl,
+
+  jsonld = null,      // page-level schemas
+  extraJson = [],     // FAQPage, ItemList, etc.
+  breadcrumbs = null, // BreadcrumbList (JSON-LD)
+  geo = null          // { placename, region, latitude, longitude }
+} = Astro.props;
+
+/* ------------------------------------------------------------
+   BUILD JSON-LD GRAPH
+------------------------------------------------------------ */
+let graph = [];
+
+/* 1) GLOBAL SCHEMAS */
+for (const key of Object.keys(jsonldConfig)) {
+  const cfg = jsonldConfig[key];
+  if (cfg.enabled && cfg.schema) graph.push(cfg.schema);
+}
+
+/* 2) ORGANIZATION */
+if (businessConfig.organization?.enabled) {
+  graph.push(businessConfig.organization.schema);
+}
+
+/* 3) LOCAL BUSINESS (optional) */
+if (businessConfig.localBusiness?.enabled) {
+  graph.push(businessConfig.localBusiness.schema);
+}
+
+/* 4) WEBSITE */
+const webSiteSchema = {
+  "@type": "WebSite",
+  "@id": `${siteConfig.siteUrl}#website`,
+  name: siteConfig.siteName,
+  url: siteConfig.siteUrl
+};
+
+/* Publisher link */
+if (businessConfig.organization?.enabled) {
+  webSiteSchema.publisher = {
+    "@id":
+      businessConfig.organization.schema["@id"] ||
+      `${siteConfig.siteUrl}#organization`
+  };
+}
+
+/* SearchAction only on homepage */
+if (canonical === siteConfig.siteUrl && aeoConfig.enableSearchAction) {
+  webSiteSchema.potentialAction = {
+    "@type": "SearchAction",
+    target: `${siteConfig.siteUrl}${aeoConfig.searchUrl}`,
+    "query-input": "required name=search_term_string"
+  };
+}
+
+graph.push(webSiteSchema);
+
+/* 5) PAGE-LEVEL JSON-LD */
+if (Array.isArray(jsonld)) graph.push(...jsonld);
+else if (jsonld) graph.push(jsonld);
+
+/* 6) BREADCRUMBS */
+if (breadcrumbs?.itemListElement?.length) {
+  graph.push({
+    "@type": "BreadcrumbList",
+    itemListElement: breadcrumbs.itemListElement
+  });
+}
+
+/* 7) EXTRA JSON */
+if (Array.isArray(extraJson)) {
+  extraJson.forEach((item) => {
+    if (item && typeof item === "object") graph.push(item);
+  });
+}
+
+/* 8) FULL GEO SCHEMA */
+if (geo?.placename) {
+  const place = {
+    "@type": "Place",
+    name: geo.placename
+  };
+
+  /* Region → ISO country code */
+  if (geo.region) {
+    place.address = {
+      "@type": "PostalAddress",
+      addressCountry: geo.region
+    };
+  }
+
+  /* Coordinates (optional) */
+  if (geo.latitude && geo.longitude) {
+    place.geo = {
+      "@type": "GeoCoordinates",
+      latitude: geo.latitude,
+      longitude: geo.longitude
+    };
+  }
+
+  graph.push(place);
+}
+
+/* 9) REMOVE DUPLICATES */
+graph = graph.filter((item, idx, arr) => {
+  const type = item["@type"];
+  if (type !== "WebSite" && type !== "Organization") return true;
+
+  return idx === arr.findIndex((x) => x["@type"] === type);
+});
+---
+
+<head>
+  <!-- BASIC SEO -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+
+  <!-- THEME -->
+  <meta name="theme-color" content={siteConfig.themeColor} />
+
+  <!-- OG TAGS -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={image} />
+  <meta property="og:url" content={canonical} />
+
+  <!-- TWITTER -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={image} />
+
+  <!-- GEO META TAGS -->
+  {geo?.placename && (
+    <>
+      <meta name="geo.placename" content={geo.placename} />
+      {geo.region && <meta name="geo.region" content={geo.region} />}
+      {geo.latitude && geo.longitude && (
+        <>
+          <meta name="geo.position" content={`${geo.latitude};${geo.longitude}`} />
+          <meta name="ICBM" content={`${geo.latitude}, ${geo.longitude}`} />
+        </>
+      )}
+    </>
+  )}
+
+  <!-- JSON-LD OUTPUT -->
+  {graph.length > 0 && (
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": graph
+      })}
+    ></script>
+  )}
+</head>

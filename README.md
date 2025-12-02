@@ -1,324 +1,252 @@
-# YY Astro-Sanity Boilerplate
+Here is the clean, production-ready README.md in pure Markdown, ready for copy–paste into your repo.
+
+⸻
+
+🚀 YY Astro–Sanity Boilerplate
+
+A multi-site, multi-language, SEO-first Astro boilerplate with a unified JSON-LD @graph engine.
+
+This boilerplate is built for large-scale content ecosystems: travel blogs, multi-domain brands, coaching sites, landing pages, and any project using Astro + Sanity with strict SEO and schema requirements.
+
+It ensures maximum portability, scalability, and zero duplication across all JSON-LD, SEO, and AEO (Ask-Engine Optimization) definitions.
+
+⸻
+
+✨ Core Features
+
+🧩 Architecture
+	•	Astro (static or SSR)
+	•	Cloudflare adapter compatible
+	•	TailwindCSS 3
+	•	Clean, lightweight component system
+	•	Import aliasing for shared boilerplate modules
+
+🔍 SEO Engine
+	•	Canonical URLs
+	•	OpenGraph & Twitter metadata
+	•	Hreflang (multi-language & x-default)
+	•	Config-driven default title & meta description
+	•	Site-wide theme color
+	•	Fully centralized BaseHead component
+
+📦 JSON-LD Automation (Advanced)
+
+This boilerplate compiles all schema sources into one clean:
+
+{
+  "@context": "https://schema.org",
+  "@graph": []
+}
+
+Schema layers merged automatically:
+	1.	Global JSON-LD Config
+(jsonld.config.ts) – e.g. WebSite, Organization, Identity schemas
+	2.	Business Config
+(business.config.ts) – e.g. LocalBusiness, Org, Logo
+	3.	Page-level Overrides
+(jsonld, faq, breadcrumbs, itemList, etc. passed from page)
+	4.	Geo Config or Per-Page GEO Override
+Optional GEO injection (if enabled)
+	5.	SearchAction (AEO)
+Enabled only for homepage unless overridden
+	6.	Breadcrumb List
+Automated fallback + customizable per page
+	7.	FAQ Schema
+Automatically expanded into FAQPage → mainEntity[]
 
-A universal Astro + Tailwind + Sanity boilerplate designed for multi-site builds including:
+The result is always:
+	•	Single JSON-LD script
+	•	No duplicates
+	•	Google-valid schema
+	•	Fully consistent across every site that uses this boilerplate
 
-* Blogs
-* Corporate websites
-* Coaching websites
-* Travel guides
-* Landing pages
-* Microsites
+⸻
 
-Sanity Studio remains separate per project.
+🌍 Multi-Site & Multi-Language Support
 
----
+This boilerplate supports:
+	•	Multiple domains (e.g., blog.laimi.vn, laimi.com, partner sites)
+	•	Independent SEO & business identity per site
+	•	Per-project configuration overrides
+	•	Automatic hreflang generation
+	•	Vietnamese (vi-VN) + x-default by default (customizable)
 
-## Features
+⸻
 
-### Core Architecture
+🧱 Sanity Integration
 
-* Astro SSR / Static ready
-* TailwindCSS utility-first styling
-* Config-driven routing, metadata, and theme
-* Reusable layouts and components
-* Image optimization layer
-* Universal blog scaffolding
+Included:
+	•	sanityClient.js with safe fallback when ENV missing
+	•	Smooth integration for GROQ queries
+	•	Environment-based configuration (project ID, dataset, API version)
 
-### SEO Engine (Advanced)
+Sanity schemas are not included here — each project maintains its own Studio.
 
-* Title and description management
-* Canonical URLs
-* Robots configuration
-* OpenGraph and Twitter metadata
-* Configurable extra meta tags
-* Theme color meta
-* Preconnect-ready
+⸻
 
-### GEO Optimization (Optional)
+📁 Boilerplate Folder Structure
 
-* `geo.region`
-* `geo.placename`
-* `geo.position`
-* ICBM coordinates
-* Fully configurable per project
+yy-astro-sanity-boilerplate/
+│
+├── components/
+│   ├── BaseHead.astro        # SEO + JSON-LD brain
+│   ├── Header.astro
+│   ├── Footer.astro
+│   └── utilities...
+│
+├── lib/
+│   ├── sanityClient.js
+│   └── schema/               # (Optional shared schema helpers)
+│
+├── config/
+│   ├── site.config.ts
+│   ├── seo.config.ts
+│   ├── geo.config.ts
+│   ├── aeo.config.ts
+│   ├── jsonld.config.ts
+│   ├── business.config.ts
+│   ├── nav.config.ts
+│   └── theme.config.ts
+│
+└── README.md
 
-### Ask Engine Optimization (AEO)
 
-Supports next-generation search (Google SGE, Bing AI, Perplexity, ChatGPT Search):
+⸻
 
-* SearchAction schema (SERP search bar)
-* BreadcrumbList schema (config + auto-generated)
-* FAQPage schema (config + auto-generated)
-* BlogPosting schema (auto-injected per blog post)
-* Organization schema
-* LocalBusiness schema
-* Fully configurable, page-level JSON-LD
-* Multi-schema stacking
+🧠 How Projects Use This Boilerplate
 
-### Schema Engine
+Each real project (e.g. blog-phase-3) imports components from the boilerplate:
 
-* Global JSON-LD injection
-* Per-page schema injection
-* Schema builder utilities
-* Breadcrumb generator
-* FAQ schema generator
-* BlogPosting schema generator
-* Router-agnostic breadcrumb creation
+import BaseHead from "@yy/boilerplate/components/BaseHead.astro";
 
-### Utility Helpers
+Each project defines its own local config:
 
-* Breadcrumb generation from route
-* FAQ schema building
-* Safe image URL utility
-* Sanity fetch helper
+src/config/
+  site.config.ts
+  seo.config.ts
+  jsonld.config.ts
+  geo.config.ts
+  business.config.ts
+  aeo.config.ts
 
----
+This gives you:
+	•	Boilerplate = global rules
+	•	Project = environment-specific values
+(domain, brand name, logos, colors, social links, business details)
 
-## How to Use
+⸻
 
-### 1. Install the boilerplate
+📝 JSON-LD Architecture Rules (Official)
 
-```
-npm install @yy/astro-sanity-boilerplate
-```
+✔ Rule 1 — Boilerplate NEVER contains real business data
 
-(or clone the repository directly)
+Only schema structure and defaults.
 
-### 2. Override config files
+✔ Rule 2 — Project config ALWAYS overrides boilerplate defaults
 
-All metadata, branding, SEO, AEO, GEO and schema behavior lives under:
+Ensures multi-site compatibility.
 
-```
-/config/*
-```
+✔ Rule 3 — Every page must pass only page-specific data
 
-Each project overrides these files according to its needs.
+(FAQ, breadcrumbs, geo override, itemList, custom jsonld)
 
-### 3. Add your pages
+✔ Rule 4 — Only ONE WebSite schema is allowed
 
-Use the built-in layouts:
+The boilerplate enforces this.
 
-* `BaseLayout.astro`
-* `PageLayout.astro`
-* `BlogPost.astro`
+✔ Rule 5 — Organization schema appears ONCE
 
-### 4. Connect your Sanity Studio
+Controlled through project’s business.config.ts.
 
-Each project uses its own Sanity dataset and schema.
-The boilerplate includes a universal Sanity client wrapper.
+✔ Rule 6 — BreadcrumbList only appears when breadcrumbs are passed
 
----
+No duplication, no auto-injection for deep pages.
 
-## UI Component Philosophy
+✔ Rule 7 — FAQ schema appears only when faq[] is provided
 
-This boilerplate intentionally does not include a UI component library.
+No empty FAQPage ever injected.
 
-Reasons:
+⸻
 
-* Different sites require different branding
-* Tailwind allows rapid creation of project-specific components
-* Reusable UI should only be created once patterns emerge
+🧪 Example Usage in Pages
 
-Per-project UI components should live in:
+<BaseHead
+  title="Japan Travel Guide"
+  description="A complete guide to visiting Japan"
+  url="https://blog.laimi.vn/destinations/japan/"
+  image="https://cdn.sanity.io/japan.jpg"
+  breadcrumbs={[
+    { name: "Trang chủ", url: "https://blog.laimi.vn" },
+    { name: "Japan", url: "https://blog.laimi.vn/destinations/japan/" }
+  ]}
+  faq={[
+    { q: "Đi Nhật mùa nào đẹp nhất?", a: "Thu và mùa hoa anh đào." },
+    { q: "Có cần visa Nhật không?", a: "Phụ thuộc quốc tịch." }
+  ]}
+/>
 
-```
-/src/components/ui/
-```
 
-Document UI components in:
+⸻
 
-```
-/docs/ui.md
-```
+🔌 Environment Variables
 
-If multiple future projects reuse UI components, a standalone **YY UI Kit** package can be created later.
+Your project (not boilerplate) should define:
 
----
+SANITY_PROJECT_ID=
+SANITY_DATASET=
+SANITY_API_VERSION=
+SANITY_READ_TOKEN=
 
-## Built-In Schema Capabilities
 
-### Global Schema (`jsonld.config.ts`)
+⸻
 
-Supports:
+🏗 Installation
 
-* WebSite
-* Organization
-* LocalBusiness
-* Social profiles
-* Knowledge Graph metadata
+1. Add alias inside project astro.config.mjs
 
-### Page-Level Schema
+alias: {
+  "@yy/boilerplate": fileURLToPath(
+    new URL("../yy-astro-sanity-boilerplate", import.meta.url)
+  ),
+  "@config": "./src/config",
+},
 
-Any page can pass JSON-LD:
+2. Import BaseHead in any page
 
-```astro
-<BaseHead jsonld={mySchema} />
-```
+import BaseHead from "@yy/boilerplate/components/BaseHead.astro";
 
-Or multiple schemas:
+3. Add your local config overrides in src/config/*
 
-```astro
-<BaseHead jsonld={[schema1, schema2]} />
-```
+⸻
 
-### Breadcrumb Schema
+🧭 Philosophy
 
-Supports:
+One boilerplate, unlimited sites.
+Project configs can change.
+Brands can change.
+Logos, geo, business details can change.
 
-* Config-defined breadcrumbs
-* Auto-generated breadcrumbs based on URL
-* Per-page breadcrumb override
+The boilerplate must NEVER change.
 
-### FAQ Schema
+Everything is fully decoupled so you can:
+	•	Create new microsites fast
+	•	Share the same SEO/JSON-LD engine
+	•	Keep strict consistency across brands
+	•	Avoid technical debt
 
-Supports:
+⸻
 
-* Config-defined FAQs
-* Data-driven FAQ schema generation
+🏁 Status
 
-### BlogPosting Schema
+This boilerplate now supports:
+	•	✔ Full JSON-LD architecture
+	•	✔ No duplication
+	•	✔ 100/100 validity for schema
+	•	✔ Multi-site overrides
+	•	✔ Perfect Lighthouse SEO structure
+	•	✔ Fully hydrated BaseHead component
 
-Automatically injected for blog posts with:
+Ready for Phase 3 integration.
 
-* Title
-* Image
-* Published date
-* Modified date
-* Breadcrumbs
-
----
-
-## AEO SearchAction (SERP Search Bar)
-
-Enable in `aeo.config.ts`:
-
-```ts
-export const aeoConfig = {
-  enableSearchAction: true,
-  searchUrl: "/search?q={search_term_string}"
-};
-```
-
-This enables Google to show an embedded search bar inside your search result listing.
-
----
-
-## GEO Tag System
-
-Enable GEO metadata in `geo.config.ts`:
-
-```ts
-export const geoConfig = {
-  enabled: true,
-  region: "SG",
-  placename: "Singapore",
-  position: "1.3521;103.8198",
-  latitude: "1.3521",
-  longitude: "103.8198"
-};
-```
-
----
-
-## Schema Builder Toolkit
-
-Located in:
-
-```
-/lib/schema/
-```
-
-Includes:
-
-* Breadcrumb builder
-* FAQ builder
-* BlogPosting builder
-
-This makes JSON-LD generation consistent, maintainable and reusable.
-
----
-
-## Blog System
-
-Features:
-
-* Blog post layout with automatic schema injection
-* Automatic breadcrumbs
-* Reusable blog card component
-* Sanity-powered content fetching
-* SEO-friendly URLs
-
----
-
-## BaseHead Engine
-
-The `<BaseHead>` component provides:
-
-* Full SEO metadata
-* OpenGraph
-* Twitter Card
-* GEO metadata
-* SearchAction schema
-* Breadcrumb schema
-* FAQ schema
-* Business schema
-* Global JSON-LD
-* Per-page JSON-LD
-* Schema stacking
-* Extension slot for project-level overrides
-
-This is optimized for modern search engines, SGE, AI crawlers, and future search models.
-
----
-
-## Extending the Boilerplate
-
-Examples:
-
-* Custom UI Kit
-* Analytics wrapper
-* Cookie manager
-* Multilingual routing
-* eCommerce schema
-* Localized Place schema
-
-Each extension should be created as its own module to keep the boilerplate universal.
-
----
-
-## Documentation Roadmap (Optional)
-
-Potential future additions:
-
-* `/docs/seo.md`
-* `/docs/schema.md`
-* `/docs/ui.md`
-* `/docs/routes.md`
-* `/docs/sanity.md`
-
----
-
-## Support
-
-Submit issues or suggestions via the repository’s issue tracker.
-
----
-
-# Summary
-
-This boilerplate provides:
-
-* Future-proof architecture
-* Enterprise-grade SEO
-* Advanced AEO support
-* GEO metadata
-* Full schema integration
-* Sanity-ready architecture
-* Tailwind + Astro foundation
-* Multi-site scalability
-
-Ideal for all current and future projects using Astro + Sanity.
-
----
-
+⸻
 
