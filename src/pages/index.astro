@@ -1,11 +1,25 @@
 ---
 import BaseHead from "@components/BaseHead.astro";
+
+// Import AI-editable sections
+import HeroSection from "../sections/HeroSection.astro";
+import AboutSection from "../sections/AboutSection.astro";
+import TestimonialsSection from "../sections/TestimonialsSection.astro";
+import CTASection from "../sections/CTASection.astro";
 ---
 
-<html>
+<html lang="en">
   <BaseHead title="Boilerplate Test" />
+
   <body>
+    <!-- Keep your original hero test message (optional) -->
     <h1>YY Astro-Sanity Boilerplate</h1>
     <p>If you can see this page, the boilerplate is working correctly.</p>
+
+    <!-- Your new section-based homepage -->
+    <HeroSection />
+    <AboutSection />
+    <TestimonialsSection />
+    <CTASection />
   </body>
 </html>

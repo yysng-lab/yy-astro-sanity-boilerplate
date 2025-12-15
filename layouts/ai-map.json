@@ -1,0 +1,28 @@
+{
+  "ai_editable_paths": [
+    "src/content/hero.json",
+    "src/content/about.json",
+    "src/content/testimonials.json",
+    "src/content/cta.json"
+  ],
+  "ai_protected_paths": [
+    "src/components/",
+    "src/layouts/",
+    "src/config/",
+    "lib/",
+    "utils/",
+    "styles/",
+    "astro.config.mjs",
+    "package.json"
+  ],
+  "instructions": {
+    "rules": [
+      "Only modify files listed in ai_editable_paths.",
+      "Never modify code components.",
+      "Never modify layout structure.",
+      "Never change folder structure.",
+      "Never introduce new dependencies.",
+      "Only modify text, images, and content blocks."
+    ]
+  }
+}
