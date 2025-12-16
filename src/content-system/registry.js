@@ -1,20 +1,18 @@
 export const CONTENT_REGISTRY = {
-hero: {
-  file: "content/hero.json",
-  section: "HeroSection",
-  __test_flag: "FROM_BOILERPLATE"
-}
-,
+  hero: {
+    file: "hero.json",
+    section: "HeroSection"
+  },
   about: {
-    file: "content/about.json",
+    file: "about.json",
     section: "AboutSection"
   },
   cta: {
-    file: "content/cta.json",
+    file: "cta.json",
     section: "CTASection"
   },
   testimonials: {
-    file: "content/testimonials.json",
+    file: "testimonials.json",
     section: "TertimonialSection"
   }
 };
