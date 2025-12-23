@@ -2,12 +2,26 @@
 import BaseHead from "@components/BaseHead.astro";
 import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
+
+const { head = {}, gtmId = null } = Astro.props;
 ---
 
 <html lang="en">
-  <BaseHead {...Astro.props.head} />
+  <BaseHead {...head} gtmId={gtmId} />
 
   <body class="min-h-screen flex flex-col">
+
+    {gtmId && (
+      <noscript>
+        <iframe
+          src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+          height="0"
+          width="0"
+          style="display:none;visibility:hidden"
+        />
+      </noscript>
+    )}
+
     <Header />
 
     <main class="flex-1 container mx-auto px-4 py-6">

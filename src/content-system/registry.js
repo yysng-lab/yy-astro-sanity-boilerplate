@@ -13,6 +13,6 @@ export const CONTENT_REGISTRY = {
   },
   testimonials: {
     file: "testimonials.json",
-    section: "TertimonialSection"
+    section: "TestimonialSection"
   }
 };

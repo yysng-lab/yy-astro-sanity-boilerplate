@@ -16,7 +16,10 @@ const jsonld = [
 ];
 ---
 
-<BaseLayout head={{ title, jsonld }}>
+<BaseLayout
+  gtmId={import.meta.env.PUBLIC_GTM_ID}
+  head={{ title, jsonld }}
+>
   <article class="prose mx-auto">
     <h1>{title}</h1>
     {image && <Image src={image} alt={title} class="rounded mt-4" />}
