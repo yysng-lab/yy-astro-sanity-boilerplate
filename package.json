@@ -1,6 +1,6 @@
 {
   "name": "@yysng/astro-boilerplate",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "Astro + Sanity Boilerplate with AEO Layers 1–5",
   "type": "module",
   "exports": {
