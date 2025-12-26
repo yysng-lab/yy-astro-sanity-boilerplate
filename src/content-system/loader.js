@@ -1,13 +1,23 @@
-import fs from "fs/promises";
-import path from "path";
-import { CONTENT_REGISTRY } from "./registry.js";
-import { getContentRoot } from "./config.js";
+// src/content-system/loader.js
 
-export async function loadContent(key) {
-  const entry = CONTENT_REGISTRY[key];
-  if (!entry) throw new Error(`Unknown content key: ${key}`);
+import hero from "../content/hero.json";
+import cta from "../content/cta.json";
+import about from "../content/about.json";
+import testimonials from "../content/testimonials.json";
 
-  const filePath = path.join(getContentRoot(), entry.file);
-  const raw = await fs.readFile(filePath, "utf-8");
-  return JSON.parse(raw);
+const CONTENT_CACHE = {
+  hero,
+  cta,
+  about,
+  testimonials
+};
+
+export function loadContent(key) {
+  const data = CONTENT_CACHE[key];
+
+  if (!data) {
+    throw new Error(`Unknown content key: ${key}`);
+  }
+
+  return data;
 }
