@@ -1,17 +1,16 @@
-// src/content-system/loader.js
+import { CONTENT_REGISTRY } from "./registry.js";
+import { readLocal } from "./storage.js";
 
-const contentModules = import.meta.glob(
-  '/src/content/*.json',
-  { eager: true }
-);
+export async function loadContent(key, env = {}) {
+  const entry = CONTENT_REGISTRY[key];
+  if (!entry) throw new Error(`Unknown content key: ${key}`);
 
-export function loadContent(key) {
-  const path = `/src/content/${key}.json`;
-  const mod = contentModules[path];
-
-  if (!mod || !mod.default) {
-    throw new Error(`Content not found: ${path}`);
+  // Cloudflare production
+  if (env.CONTENT_KV) {
+    const stored = await env.CONTENT_KV.get(entry.file, "json");
+    if (stored) return stored;
   }
 
-  return mod.default;
+  // Local development fallback
+  return await readLocal(entry.file);
 }
