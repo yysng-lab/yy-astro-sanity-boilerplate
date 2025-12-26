@@ -1,28 +1,23 @@
 import { CONTENT_REGISTRY } from "./registry.js";
 import { readLocal } from "./storage.js";
-
-// Edge-safe bundled content (used when no filesystem)
-const edgeContent = import.meta.glob("/src/content/*.json", { eager: true });
+import { getContentRoot } from "./config.js";
 
 export async function loadContent(key, env = {}) {
   const entry = CONTENT_REGISTRY[key];
   if (!entry) throw new Error(`Unknown content key: ${key}`);
 
-  // 1️⃣ Cloudflare production: KV first
-  if (env.CONTENT_KV) {
+  // 🧠 Production: Cloudflare KV
+  if (env && env.CONTENT_KV) {
     const stored = await env.CONTENT_KV.get(entry.file, "json");
     if (stored) return stored;
+    throw new Error(`Missing content in KV: ${entry.file}`);
   }
 
-  // 2️⃣ Edge runtime fallback (no filesystem available)
-  if (!env.CONTENT_ROOT) {
-    const mod = edgeContent[`/src/content/${entry.file}`];
-    if (!mod || !mod.default) {
-      throw new Error(`Edge content not found: ${entry.file}`);
-    }
-    return mod.default;
+  // 🧪 Local dev: filesystem
+  const root = getContentRoot();
+  if (!root) {
+    throw new Error("Content root not configured in local environment");
   }
 
-  // 3️⃣ Local Node development (filesystem)
-  return await readLocal(env.CONTENT_ROOT, entry.file);
+  return await readLocal(root, entry.file);
 }
