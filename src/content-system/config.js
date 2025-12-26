@@ -1,12 +1,11 @@
-let CONTENT_ROOT = null;
+let contentRoot = null;
 
 export function setContentRoot(path) {
-  CONTENT_ROOT = path;
+  contentRoot = path;
 }
 
 export function getContentRoot() {
-  if (!CONTENT_ROOT) {
-    throw new Error("Content root not configured. Call setContentRoot() from the site.");
-  }
-  return CONTENT_ROOT;
+  // When running on edge, we no longer require filesystem root.
+  // Loader will use import.meta.glob instead.
+  return contentRoot;
 }
