@@ -1,23 +1,17 @@
 // src/content-system/loader.js
 
-import hero from "../content/hero.json";
-import cta from "../content/cta.json";
-import about from "../content/about.json";
-import testimonials from "../content/testimonials.json";
-
-const CONTENT_CACHE = {
-  hero,
-  cta,
-  about,
-  testimonials
-};
+const contentModules = import.meta.glob(
+  '/src/content/*.json',
+  { eager: true }
+);
 
 export function loadContent(key) {
-  const data = CONTENT_CACHE[key];
+  const path = `/src/content/${key}.json`;
+  const mod = contentModules[path];
 
-  if (!data) {
-    throw new Error(`Unknown content key: ${key}`);
+  if (!mod || !mod.default) {
+    throw new Error(`Content not found: ${path}`);
   }
 
-  return data;
+  return mod.default;
 }
