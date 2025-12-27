@@ -8,7 +8,7 @@ import { getContentRoot } from "./config.js";
 export async function readLocal(file) {
   const root = getContentRoot();
   if (!root) {
-    throw new Error("Content root not configured");
+    throw new Error("Content root not configured in local environment");
   }
 
   const filePath = path.join(root, file);
@@ -22,7 +22,7 @@ export async function readLocal(file) {
 export async function writeLocal(file, data) {
   const root = getContentRoot();
   if (!root) {
-    throw new Error("Content root not configured");
+    throw new Error("Content root not configured in local environment");
   }
 
   const filePath = path.join(root, file);

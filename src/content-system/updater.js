@@ -31,13 +31,13 @@ export async function updateContent(key, incoming, env = {}) {
 
   schema.validate(merged);
 
-  // 🌍 Production: Cloudflare KV
+  // Production: Cloudflare KV
   if (env?.CONTENT_KV) {
     await env.CONTENT_KV.put(entry.file, JSON.stringify(merged));
     return merged;
   }
 
-  // 🖥️ Local development
+  // Local dev: filesystem
   await writeLocal(entry.file, merged);
   return merged;
 }
