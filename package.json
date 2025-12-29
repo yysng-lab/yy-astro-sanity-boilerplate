@@ -4,13 +4,17 @@
   "description": "Astro + Sanity Boilerplate with AEO Layers 1–5",
   "type": "module",
   "exports": {
-    ".": "./src/index.js",
-    "./components/*": "./src/components/*",
-    "./layouts/*": "./src/layouts/*",
-    "./styles/*": "./src/styles/*",
-    "./lib/*": "./src/lib/*",
-    "./utils/*": "./src/utils/*"
-  },
+  ".": "./src/index.js",
+
+  "./components/*": "./src/components/*",
+  "./layouts/*": "./src/layouts/*",
+  "./styles/*": "./src/styles/*",
+  "./lib/*": "./src/lib/*",
+  "./utils/*": "./src/utils/*",
+
+  "./content-loader": "./src/content-system/loader.js",
+  "./content-storage": "./src/content-system/storage.js"
+},
   "main": "./src/index.js",
   "files": [
     "src"
