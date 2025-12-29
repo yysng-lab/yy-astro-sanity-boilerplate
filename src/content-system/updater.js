@@ -5,14 +5,13 @@ import { CONTENT_REGISTRY } from "./registry.js";
 
 function mergeDefined(existing, incoming) {
   const result = { ...existing };
-  for (const key of Object.keys(incoming)) {
-    const value = incoming[key];
-    if (value === undefined) continue;
-
-    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
-      result[key] = mergeDefined(existing[key] || {}, value);
+  for (const k in incoming) {
+    const v = incoming[k];
+    if (v === undefined) continue;
+    if (typeof v === "object" && v && !Array.isArray(v)) {
+      result[k] = mergeDefined(existing[k] || {}, v);
     } else {
-      result[key] = value;
+      result[k] = v;
     }
   }
   return result;
@@ -33,6 +32,6 @@ export async function updateContent(key, incoming, env = {}) {
     return merged;
   }
 
-  await writeLocal(entry.file, merged);
+  await writeLocal(entry.file, merged, env);
   return merged;
 }

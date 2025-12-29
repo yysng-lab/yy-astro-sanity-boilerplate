@@ -1,12 +1,17 @@
-const isEdge = typeof process === "undefined";
+// storage.js — runtime dispatcher
 
-let impl;
-
-if (isEdge) {
-  impl = await import("./storage.edge.js");
-} else {
-  impl = await import("./storage.node.js");
+export async function readLocal(file, env) {
+  if (env?.CONTENT_KV) {
+    throw new Error("readLocal should not be called on Edge");
+  }
+  const { readLocal: nodeRead } = await import("./storage.node.js");
+  return nodeRead(file);
 }
 
-export const readLocal = impl.readLocal;
-export const writeLocal = impl.writeLocal;
+export async function writeLocal(file, data, env) {
+  if (env?.CONTENT_KV) {
+    throw new Error("writeLocal should not be called on Edge");
+  }
+  const { writeLocal: nodeWrite } = await import("./storage.node.js");
+  return nodeWrite(file, data);
+}

@@ -5,13 +5,13 @@ export async function loadContent(key, env = {}) {
   const entry = CONTENT_REGISTRY[key];
   if (!entry) throw new Error(`Unknown content key: ${key}`);
 
-  // Cloudflare runtime
+  // Edge → KV only
   if (env?.CONTENT_KV) {
     const stored = await env.CONTENT_KV.get(entry.file, "json");
-    if (stored) return stored;
-    throw new Error(`KV missing content for key "${key}"`);
+    if (!stored) throw new Error(`KV missing content for key "${key}"`);
+    return stored;
   }
 
-  // Local dev
-  return await readLocal(entry.file);
+  // Node → filesystem only
+  return readLocal(entry.file, env);
 }
