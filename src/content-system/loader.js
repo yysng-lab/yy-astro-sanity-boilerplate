@@ -1,14 +1,17 @@
+import { CONTENT_REGISTRY } from "./registry.js";
+import { readLocal } from "./storage.js";
+
 export async function loadContent(key, env = {}) {
   const entry = CONTENT_REGISTRY[key];
   if (!entry) throw new Error(`Unknown content key: ${key}`);
 
+  // Cloudflare runtime
   if (env?.CONTENT_KV) {
     const stored = await env.CONTENT_KV.get(entry.file, "json");
-    if (!stored) throw new Error(`Missing KV content: ${entry.file}`);
-    return stored;
+    if (stored) return stored;
+    throw new Error(`KV missing content for key "${key}"`);
   }
 
-  // Only import storage on Node
-  const { readLocal } = await import("./storage.js");
+  // Local dev
   return await readLocal(entry.file);
 }
