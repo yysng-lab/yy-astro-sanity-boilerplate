@@ -1,0 +1,1 @@
+export { readLocal, writeLocal } from "./storage.edge.js";

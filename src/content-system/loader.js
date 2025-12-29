@@ -1,5 +1,5 @@
 import { CONTENT_REGISTRY } from "./registry.js";
-import { readLocal } from "./storage.js";
+import { readLocal } from "@yysng/astro-boilerplate/content-storage";
 
 export async function loadContent(key, env = {}) {
   const entry = CONTENT_REGISTRY[key];

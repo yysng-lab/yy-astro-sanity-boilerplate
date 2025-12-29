@@ -1,6 +1,6 @@
 import { schemas } from "./schemas.js";
 import { loadContent } from "./loader.js";
-import { writeLocal } from "./storage.js";
+import { writeLocal }from "@yysng/astro-boilerplate/content-storage";
 import { CONTENT_REGISTRY } from "./registry.js";
 
 function mergeDefined(existing, incoming) {
