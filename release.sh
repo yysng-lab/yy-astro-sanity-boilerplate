@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e
 
+echo "🔐 Verifying clean working tree..."
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  echo "❌ Working tree not clean. Commit or stash first."
+  exit 1
+fi
+
 # 1. Auto-stage everything
 git add .
 
@@ -15,14 +21,14 @@ fi
 
 # 3. Bump version
 echo "📦 Bumping patch version..."
-npm version patch
+NEW_VERSION=$(npm version patch)
 
 # 4. Publish package
-echo "🚀 Publishing to npm..."
+echo "🚀 Publishing $NEW_VERSION to npm..."
 npm publish
 
 # 5. Push commits + tags
 echo "📌 Pushing to origin..."
 git push --follow-tags
 
-echo "✅ Release complete"
+echo "✅ Boilerplate released: $NEW_VERSION"
