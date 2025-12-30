@@ -4,13 +4,21 @@ import { CONTENT_REGISTRY } from "./registry.js";
 
 const isEdge = typeof process === "undefined";
 
-const { writeLocal } = isEdge
-  ? await import("@yysng/astro-boilerplate/content-storage/edge")
-  : await import("@yysng/astro-boilerplate/content-storage/node");
+// IMPORTANT:
+// - On edge, never import node storage.
+// - Use @vite-ignore + variable specifier to avoid bundling node fs into worker.
+async function getStorage() {
+  if (isEdge) {
+    const p = "@yysng/astro-boilerplate/content-storage/edge";
+    return await import(/* @vite-ignore */ p);
+  } else {
+    const p = "@yysng/astro-boilerplate/content-storage/node";
+    return await import(/* @vite-ignore */ p);
+  }
+}
 
 function mergeDefined(existing, incoming) {
   const result = { ...existing };
-
   for (const k in incoming) {
     const v = incoming[k];
     if (v === undefined) continue;
@@ -21,7 +29,6 @@ function mergeDefined(existing, incoming) {
       result[k] = v;
     }
   }
-
   return result;
 }
 
@@ -35,13 +42,21 @@ export async function updateContent(key, incoming, env = {}) {
 
   schema.validate(merged);
 
-  // Cloudflare
+  // Cloudflare KV
   if (env?.CONTENT_KV) {
     await env.CONTENT_KV.put(entry.file, JSON.stringify(merged));
     return merged;
   }
 
-  // Local dev
+  // Edge must never write local
+  if (isEdge) {
+    throw new Error(
+      `Edge runtime missing CONTENT_KV binding for updateContent("${key}").`
+    );
+  }
+
+  // Local dev filesystem write
+  const { writeLocal } = await getStorage();
   await writeLocal(entry.file, merged);
   return merged;
 }
